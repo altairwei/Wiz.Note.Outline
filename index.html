@@ -305,7 +305,7 @@
       moduleData = window.JSPluginModuleSpec;
       pluginPath = pluginData.path;
       objWindow = objApp.Window;
-      browserObject = objWindow.CurrentDocumentBrowserObject;
+      browserObject = await objWindow.CurrentDocumentBrowserObject();
       strings = JSON.parse(pluginData.strings);
       objApp.LoadStringFromFile = LoadStringFromFile;
       //
@@ -317,7 +317,8 @@
         clear();
       });
       //
-      moduleData.willShow.connect(() => {
+      moduleData.willShow.connect(async () => {
+        browserObject = await objWindow.CurrentDocumentBrowserObject();
         loadData();
       });
       //
