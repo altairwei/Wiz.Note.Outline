@@ -264,8 +264,8 @@
     let inited = false;
     var objApp;
     var pluginPath;
-    var pluginData;
-    var moduleData;
+    var objPlugin;
+    var objModule;
     var objWindow;
     var browserObject;
     var htmltext = "";
@@ -280,7 +280,7 @@
 
     // Initialize WizNote APIs
     new QWebChannel(qt.webChannelTransport, function (channel) {
-        var objectNames = ["WizExplorerApp", "JSPluginSpec", "JSPluginModuleSpec"];
+        var objectNames = ["WizExplorerApp", "JSPlugin", "JSPluginModule"];
         for (var i = 0; i < objectNames.length; i++) {
             var key = objectNames[i];
             window[key] = channel.objects[key];
@@ -301,23 +301,23 @@
       if (inited) return;
       //
       objApp = window.WizExplorerApp;
-      pluginData = window.JSPluginSpec;
-      moduleData = window.JSPluginModuleSpec;
-      pluginPath = pluginData.path;
+      objPlugin = window.JSPlugin;
+      objModule = window.JSPluginModule;
+      pluginPath = objPlugin.PluginPath;
       objWindow = objApp.Window;
       browserObject = await objWindow.CurrentDocumentBrowserObject();
-      strings = JSON.parse(pluginData.strings);
+      strings = JSON.parse(objPlugin.strings);
       objApp.LoadStringFromFile = LoadStringFromFile;
       //
       languangeFileName = pluginPath + "manifest.ini";
       //
       loadData();
       //
-      moduleData.documentChanged.connect(() => {
+      objModule.documentChanged.connect(() => {
         clear();
       });
       //
-      moduleData.willShow.connect(async () => {
+      objModule.willShow.connect(async () => {
         browserObject = await objWindow.CurrentDocumentBrowserObject();
         loadData();
       });
