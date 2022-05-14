@@ -312,19 +312,15 @@
       languangeFileName = pluginPath + "manifest.ini";
       //
       loadData();
-      //
-      objModule.documentChanged.connect(() => {
-        clear();
-      });
 
       async function refresh() {
         browserObject = await objWindow.CurrentDocumentBrowserObject();
         loadData();
       }
 
-      objModule.willShow.connect(refresh);
+      objModule.documentChanged.connect(refresh);
       objModule.documentHtmlChanged.connect(refresh);
-      //
+
       try {
         //isCurDocEditing = objWindow.IsDocumentEditing(objWizDocument.GUID);
       } catch (e) {
