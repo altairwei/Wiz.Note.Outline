@@ -316,11 +316,14 @@
       objModule.documentChanged.connect(() => {
         clear();
       });
-      //
-      objModule.willShow.connect(async () => {
+
+      async function refresh() {
         browserObject = await objWindow.CurrentDocumentBrowserObject();
         loadData();
-      });
+      }
+
+      objModule.willShow.connect(refresh);
+      objModule.documentHtmlChanged.connect(refresh);
       //
       try {
         //isCurDocEditing = objWindow.IsDocumentEditing(objWizDocument.GUID);
