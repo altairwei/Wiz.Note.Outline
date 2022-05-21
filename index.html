@@ -280,7 +280,7 @@
 
     // Initialize WizNote APIs
     new QWebChannel(qt.webChannelTransport, function (channel) {
-        var objectNames = ["WizExplorerApp", "JSPlugin", "JSPluginModule"];
+        var objectNames = ["WizExplorerApp", "JSPlugin", "JSPluginModule", "JSPluginWindow"];
         for (var i = 0; i < objectNames.length; i++) {
             var key = objectNames[i];
             window[key] = channel.objects[key];
@@ -305,6 +305,7 @@
       objModule = window.JSPluginModule;
       pluginPath = objPlugin.PluginPath;
       objWindow = objApp.Window;
+      pluginWindow = window.JSPluginWindow
       browserObject = await objWindow.CurrentDocumentBrowserObject();
       strings = JSON.parse(objPlugin.strings);
       objApp.LoadStringFromFile = LoadStringFromFile;
@@ -318,8 +319,11 @@
         loadData();
       }
 
-      objModule.documentChanged.connect(refresh);
-      objModule.documentHtmlChanged.connect(refresh);
+      //objModule.documentChanged.connect(refresh);
+      pluginWindow.documentHtmlChanged.connect(refresh);
+      pluginWindow.editorLoadFinished.connect(() => {
+        setTimeout(refresh, 1000)
+      });
 
       try {
         //isCurDocEditing = objWindow.IsDocumentEditing(objWizDocument.GUID);
